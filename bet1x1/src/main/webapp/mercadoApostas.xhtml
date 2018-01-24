@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<!-- How to pass parameter to JSF 2.x template file: -->
+	<!-- https://www.mkyong.com/jsf2/how-to-pass-parameters-to-jsf-2-0-template-file/ -->
+	<f:metadata>
+		<f:viewAction action="#{mercadoApostas.init()}"/>
+	</f:metadata>
+	
+	<ui:define name="title">
+		Mercado de Apostas
+	</ui:define>
+
+	<ui:define name="content">
+		<h:outputScript name="locale-primefaces.js" library="js" />
+		
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+	
+		
+		<p:fieldset legend="Filtro" >
+		
+			<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+			<h:form id="formFiltro">
+				
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+					<f:facet name="caption">
+						<h:outputText value="Filtros"/>
+					</f:facet>		
+	
+		
+					<p:outputLabel value="Modalidade: " for="grupoModalidade" />
+					<p:selectOneMenu id="grupoModalidade" value="#{mercadoApostas.modalidadeFiltro}" label="modalidades">
+						<f:selectItem  itemLabel="Todos" itemValue="#{null}" />
+						<f:selectItems var="m" value="#{mercadoApostas.getModalidades()}"  
+										itemLabel="#{m.nome}" itemValue="#{m}" />
+						<p:ajax update=":formFiltro:grupoCompeticoes :idMessagesErrors "  
+								listener="#{mercadoApostas.loadCompeticoes()}" 
+								event="change"/>						
+					</p:selectOneMenu>
+							
+			
+					<p:outputLabel value="Competição: " for="grupoCompeticoes" />
+					<p:selectOneMenu id="grupoCompeticoes" value="#{mercadoApostas.competicaoFiltro}" label="competicoes">
+						<f:selectItem  itemLabel="Todos" itemValue="#{null}" />
+						<f:selectItems var="c" value="#{mercadoApostas.getCompeticoes()}"  itemLabel="#{c.nome}" itemValue="#{c}" />
+						<p:ajax update=":formFiltro:grupoEvento :idMessagesErrors "  
+								listener="#{mercadoApostas.loadEventos()}" 
+								event="change"/>
+					</p:selectOneMenu>		
+					
+					<p:outputLabel value="Evento: " for="grupoEvento" />
+					<p:selectOneMenu id="grupoEvento" value="#{mercadoApostas.eventoFiltro}" label="eventos">
+						<f:selectItem  itemLabel="Todos" itemValue="#{null}" />
+						<f:selectItems var="e" value="#{mercadoApostas.getEventos()}"  
+										itemLabel="#{e.chamada()}" itemValue="#{e}" />
+					</p:selectOneMenu>
+					
+							
+					<p:outputLabel value="Evento até: " for="dataAte" />	
+					<ui:include src="/WEB-INF/templates/_calendario.xhtml">
+						<ui:param name="id" value="dataAte" />
+						<ui:param name="required" value="false" />
+						<ui:param name="value" value="#{mercadoApostas.dataAte}" />
+						<ui:param name="name" value="Data Ate" />
+					</ui:include>
+					
+					<p:outputLabel value="Evento a partir de: " for="dataAPartir" />	
+					<ui:include src="/WEB-INF/templates/_calendario.xhtml">
+						<ui:param name="id" value="dataAPartir" />
+						<ui:param name="required" value="false" />
+						<ui:param name="value" value="#{mercadoApostas.dataAPartir}" />
+						<ui:param name="name" value="Data a Partir" />
+					</ui:include>
+					
+					<p:outputLabel value="Valor para aceitar aposta mín.: " for="valorPegarMin" />
+					<p:inputNumber id="valorPegarMin" value="#{mercadoApostas.valorPegarMin}"> 
+		               		<p:ajax update="valorPegarMin" />  
+	           		</p:inputNumber>  
+					
+					<p:outputLabel value="Valor para aceitar aposta máx.: " for="valorPegarMax" />
+					<p:inputNumber id="valorPegarMax" value="#{mercadoApostas.valorPegarMax}">  
+	               		<p:ajax update="valorPegarMax" />  
+	           		</p:inputNumber>  
+	           		
+    				<p:outputLabel value="Valor de retorno esperado mín.: " for="valorRetornoMin" />
+					<p:inputNumber id="valorRetornoMin" value="#{mercadoApostas.valorRetornoMin}"> 
+		               		<p:ajax update="valorRetornoMin" />  
+	           		</p:inputNumber>  
+					
+					<p:outputLabel value="Valor de retorno esperado máx.: " for="valorRetornoMax" />
+					<p:inputNumber id="valorRetornoMax" value="#{mercadoApostas.valorRetornoMax}">  
+	               		<p:ajax update="valorRetornoMax" />  
+	           		</p:inputNumber> 
+					
+			
+					<p:commandButton id="btnPesquisar" action="#{mercadoApostas.loadApostas()}" value="Pesquisar!" 
+						update=":dataTableApostas"/>
+
+					
+
+					
+				</p:panelGrid>
+		
+			</h:form>
+		</p:fieldset>
+	
+	
+		<p:fieldset legend="Mercado">
+			<p:dataTable id="dataTableApostas" var="aposta" value="#{mercadoApostas.apostas}" 
+					emptyMessage="Nenhuma aposta encontrada." 
+					rows="5" 
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+				<p:column headerText="Aposta: ">
+					<h:outputText value="#{aposta.chamadaDaAposta()}" />
+				</p:column>
+				<p:column headerText="Data:">
+					<h:outputText value="#{aposta.evento.chamada()}" />
+				</p:column>
+				<p:column headerText="Data:">
+					<h:outputText value="#{aposta.evento.data}" />
+				</p:column>
+				<p:column headerText="Valor para pegar a aposta:">
+					<h:outputText value="#{aposta.valorEsperado}" />
+				</p:column>
+				<p:column headerText="Valor se você ganhar:">
+					<h:outputText value="#{aposta.valorApostado}" />
+				</p:column>
+				<p:column headerText="Desafiante:">
+					<p:link outcome="perfilUsuario.xhtml" value="#{aposta.usuarioDesafiante.login}">
+					    <f:param name="usuario" value="#{aposta.usuarioDesafiante.id}" />
+					</p:link>
+				</p:column>
+				<p:column headerText="Apostar:">
+					<p:commandButton id="apostarButton" action="#{mercadoApostas.pegarAposta(aposta.id)}" icon="fa fa-money" />
+				</p:column>
+								
+			</p:dataTable>
+		</p:fieldset>
+		
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{conversas.init()}"/>
+	</f:metadata>
+	
+	
+
+	
+
+	
+	<ui:define name="title">
+		Conversações 
+	</ui:define>
+
+	<ui:define name="content">
+	
+
+
+	
+		<h:outputScript name="locale-primefaces.js" library="js" />
+
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+
+		<p:socket  onMessage="handleMessage"   channel="/chat">
+			<p:ajax listener="#{conversas.loadConversas()}" update=":tableConversas" />
+		</p:socket>
+		
+		<script type="text/javascript">
+			function handleMessage() {
+			}
+		
+		</script>
+	
+
+		
+		<p:dataTable id="tableConversas" var="c" value="#{conversas.conversasLista}" emptyMessage="Nenhuma conversa, 
+				mande mensagens para alguém." 
+					rows="5" 
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+				<p:column headerText="Usuario:">
+					<h:outputText value="#{c.nomeDoOutro()}" />
+				</p:column>
+				<p:column headerText="Novas Mensagens?">
+					<h:outputText value="#{c.mensagensNovas()}" />
+				</p:column>
+				<p:column headerText="Apostar:">
+					<p:button id="btnVerConversa" outcome="mensagens.xhtml" icon="fa fa-comment-o" >
+						<f:param name="conversa" value="#{c.id}" />
+					</p:button>
+				</p:column>
+								
+			</p:dataTable>
+		
+		
+		
+		
+    </ui:define>
+</ui:composition>
+</html>

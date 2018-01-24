@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{addDisputante.init()}"/> 
+	</f:metadata>
+	
+	
+	<ui:define name="title">
+		Adicionar Disputante
+	</ui:define>
+
+	<ui:define name="content">
+
+		
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+		<p:messages id="idMessagesErrors" showDetail="true" autoUpdate="true" closable="true" severity="error" />
+	
+		<h:form id="adicionarDisputanteForm">
+	
+
+			<p:panelGrid columns="2" styleClass="ui-noborder">
+				<p:outputLabel value="Modalidade: " for="grupoModalidade" />
+				<p:selectOneMenu id="grupoModalidade" value="#{addDisputante.modalidadeEscolhida}" label="modalidades">
+						<f:selectItems var="m" value="#{addDisputante.getModalidades()}"  itemLabel="#{m.nome}" itemValue="#{m}" />
+				</p:selectOneMenu>
+				
+				<p:outputLabel for="disputanteNome" value="Nome: " />
+				<p:inputText id="disputanteNome" value="#{addDisputante.disputante.nome}" label="disputante nome" />
+			</p:panelGrid>
+
+			
+			<p:commandButton id="btnAdicioanrDisputanteCompeticao" action="#{addDisputante.adicionar()}" value="Adicionar!" />
+	
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

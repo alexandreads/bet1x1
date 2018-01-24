@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+	
+	
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+	<f:metadata>
+		<o:viewParam name="evento" value="#{cadastrarAposta.evento}" />
+		<o:viewParam name="desafiado" value="#{cadastrarAposta.desafiado}" />
+		
+		<f:viewAction action="#{cadastrarAposta.init()}"/> 
+	</f:metadata>
+	
+	
+	
+	
+	<ui:define name="title">
+		Cadastrar Aposta
+	</ui:define>
+	
+
+	<ui:define name="content">
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		<h:outputText value="#{cadastrarAposta.evento.nome}" />
+				 
+		<p:fieldset legend="Quem vence?" toggleable="true" rendered="#{cadastrarAposta.isFutebol()}" >
+		
+			
+		
+			<h:form id="quemVenceFutebol">
+			
+			
+			
+			
+				
+				<p:panelGrid columns="2" styleClass="ui-noborder" >
+				
+				
+					<p:outputLabel for="opcoes" value="Vencedor:" />
+			    	<p:selectOneRadio id="opcoes"  layout="grid" columns="2" value="#{cadastrarAposta.condicao.disputante1}">
+	            		<f:selectItem itemLabel= "#{cadastrarAposta.disputantes.get(0).nome}" 
+	            						itemValue="#{cadastrarAposta.disputantes.get(0)}"/>
+	            		<f:selectItem itemLabel= "#{cadastrarAposta.disputantes.get(1).nome}" 
+										itemValue="#{cadastrarAposta.disputantes.get(1)}" />
+	        		</p:selectOneRadio>
+	        		
+	        		
+	        		
+	        		<p:outputLabel for="variacao" value="Bonûs/Desvantagem no placar de uma equipe:" />
+	        		
+	        		<p:panelGrid id="variacao" columns="4" styleClass="ui-noborder">
+	        			<p:outputLabel for="handicapTime1Futebol"  />
+	        			<p:selectOneMenu id="handicapTime1Futebol" value="#{cadastrarAposta.condicao.varianteDisputante1}" >
+	               			<f:selectItems value="#{cadastrarAposta.opcoesHandicapFutebol}" var="hf" 
+	               			itemLabel="#{hf.nome}" itemValue="#{hf.valor}" />
+	           			</p:selectOneMenu>
+	           			
+	           			<p:outputLabel for="handicapTime2Futebol"  />
+	        			<p:selectOneMenu id="handicapTime2Futebol" value="#{cadastrarAposta.condicao.varianteDisputante2}" >
+	               			<f:selectItems value="#{cadastrarAposta.opcoesHandicapFutebol}" var="hf" 
+	               			itemLabel="#{hf.nome}" itemValue="#{hf.valor}" />
+	           			</p:selectOneMenu>
+	        			
+
+	        		</p:panelGrid>
+	
+	
+        			<p:commandButton id="quemVenceFutebolBtn" value="Apostar!"
+						oncomplete="if (!args.validationFailed) { PF('cadastrarApostaDialogo').show() }" 
+						update=":cadastrarApostaDialogoId" action="#{cadastrarAposta.setarTipoCondicao(0)}"/>
+						
+
+
+
+
+	
+	
+				</p:panelGrid>
+		
+			</h:form>
+		</p:fieldset>
+		
+		
+		<!-- formula 1 quem vence -->
+		
+		 <p:fieldset legend="Quem chega na frente?" toggleable="true" rendered="#{cadastrarAposta.isAutomobilismo()}" >
+		
+		
+			<h:form id="quemChegaNaFrenteAuto" >
+			
+				
+				<p:panelGrid columns="3" styleClass="ui-noborder" >
+				
+				
+					
+			    	<p:selectOneMenu id="quemChegaNaFrenteAutoP1"  layout="grid"
+			    		value="#{cadastrarAposta.condicao.disputante1}" >
+			            <f:selectItems value="#{cadastrarAposta.disputantes}" var="p1" 
+	               			itemLabel="#{p1.nome}" itemValue="#{p1}" />
+	        		</p:selectOneMenu>
+	        		
+	        		<p:outputLabel for="quemChegaNaFrenteAutoP2" value=" chega na frente de " />
+	        		
+    				<p:selectOneMenu id="quemChegaNaFrenteAutoP2"  layout="grid" 
+			    		value="#{cadastrarAposta.condicao.disputante2}" >
+			            <f:selectItems value="#{cadastrarAposta.disputantes}" var="p2" 
+	               			itemLabel="#{p2.nome}" itemValue="#{p2}" />
+	            		
+	        		</p:selectOneMenu>
+	        		
+	
+	
+	
+	
+	
+	
+	
+	
+        			<p:commandButton id="quemChegaNaFrenteAutoBtn" value="Apostar!"
+						oncomplete="if (!args.validationFailed) { PF('cadastrarApostaDialogo').show() }" 
+						update=":cadastrarApostaDialogoId" action="#{cadastrarAposta.setarTipoCondicao(1)}" />
+						
+	
+				</p:panelGrid>
+		
+			</h:form>
+			
+		</p:fieldset>
+		
+		
+		
+    	<p:dialog id="cadastrarApostaDialogoId" widgetVar="cadastrarApostaDialogo" header="Definir Aposta" modal="true" dynamic="true" closeOnEscape="true">
+		
+			<p:messages id="idMessagesErrorsUserEdit" showDetail="true" closable="true" autoUpdate="true" severity="error" />
+		
+			<h:form id="formApostaMercado">
+			
+			<p:panelGrid  columns="1" styleClass="ui-noborder">
+		
+				<p:panelGrid columns="4" styleClass="ui-noborder">
+	   				<p:outputLabel for="valorApostado" value="Valor apostado:" />
+	   				<p:inputNumber id="valorApostado" value="#{cadastrarAposta.aposta.valorApostado}">  
+	               		<p:ajax update="valorApostado" />  
+	           		</p:inputNumber> 
+	           		
+	           		<p:outputLabel for="valorRetorno" value="Retorno esperado:" />
+	   				<p:inputNumber id="valorRetorno" value="#{cadastrarAposta.aposta.valorEsperado}">  
+	               		<p:ajax update="valorRetorno" />  
+	           		</p:inputNumber> 
+	           		
+	           		
+	           		
+	       		</p:panelGrid> 
+	       		
+    
+	       		
+	       		
+	       		
+	 
+				<p:commandButton id="cadastrarApostaBtn" action="#{cadastrarAposta.cadastrarMercado()}" 
+					value="Publicar aposta no Mercado"  icon="fa fa-save" />	
+					
+				
+				<h:outputText  value="---------------------ou------------------------"   />
+
+				<p:selectOneMenu id="desafiado" value="#{cadastrarAposta.desafiado}" 
+					label="desafiado"  filter="true" filterMatchMode="contains">
+						<f:selectItem  itemLabel="Selecione" itemValue="#{null}" />
+						<f:selectItems var="u" value="#{cadastrarAposta.getPotenciaisDesafiados()}"  itemLabel="#{u.nome}" 
+						itemValue="#{u}" />
+						
+				</p:selectOneMenu>	
+				
+				
+				<p:commandButton id="btnCadastrarApostaDirecionada" action="#{cadastrarAposta.cadastrarDirecionada()}" 
+					value="Desafiar o usuário acima!"  icon="fa fa-save" />	
+							
+							
+			</p:panelGrid>
+			</h:form>
+			
+		
+		</p:dialog>
+		
+	 </ui:define>
+	 
+</ui:composition> 
+
+</html>

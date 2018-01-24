@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+	<title><ui:insert name="title">Página principal</ui:insert></title>
+</h:head>
+
+<h:body>
+
+	
+	
+	<!-- parte de pegar o time zone -->
+
+
+
+<!-- 	É dessa forma que pega a timeZone porem dava problema pois toda pagina ficava dobrava. melhorar isso
+		mas achoque vou pegar de outra forma mesmo. -->
+	
+<!-- 	<h:form>
+	
+		<p:remoteCommand name="remote" actionListener="#{login.timeZone()}"/>
+		
+	</h:form>
+	
+	<script type='text/javascript'>
+		
+		var dateVar = new Date();
+		var timeZone = dateVar.getTimezoneOffset()/60 * (-1);  
+		remote([{name:'timeZone', value: timeZone}]);
+			
+	</script> -->
+		
+
+	
+	<div id="header">
+		<ui:insert name="header">
+			<!-- https://www.primefaces.org/showcase/ui/menu/menubar.xhtml -->
+			<h:form id="formMenu">
+				<p:menubar>
+					<p:menuitem id="inicioLink" value=" Início" url="/index.xhtml" icon="fa fa-home" />
+
+					
+					<p:menuitem id="mercadoDeApostasLink" value="Mercado de Apostas" url="/mercadoApostas.xhtml" icon="fa fa-fw fa-money" />
+					<p:menuitem id="minhasApostasLink" value="Minhas Apostas" url="/minhasApostas.xhtml" icon="fa fa-fw fa-money" />
+					
+					<p:submenu id="submenuSocial" label=" Social" url="/minhasApostas.xhtml" icon="fa fa-podcast" 
+								rendered="#{login.logado()}">
+						<p:menuitem id="amizadesLink" value="Amizades" url="/amizades.xhtml" icon="fa fa-users" />
+						<p:menuitem id="conversasLink" value="Conversas" url="/conversas.xhtml" icon="fa fa-comments-o" />
+					</p:submenu>
+					
+					<p:submenu id="submenuAdministrar" label="Administrar" icon="fa fa-fw fa-gear"
+							rendered="#{login.isUserInRole('ADMIN')}" >
+						<p:menuitem id="submenuAdicionarCompeticao" value="Add Competição" url="/admin/addCompeticao.xhtml" />
+						<p:menuitem id="submenuAdicionarEvento" value="Add Evento" url="/admin/addEvento.xhtml" />
+						<p:menuitem id="submenuAdicionarDisputante" value="Menu Disputante" url="/admin/menuDisputante.xhtml" />
+						<p:menuitem id="submenuUsuario" value="Menu Usuario" url="/admin/menuUsuario.xhtml" />
+						<p:menuitem id="submenuAposta" value="Menu Aposta" url="/admin/menuAposta.xhtml" />
+						
+					</p:submenu>
+					
+
+					<f:facet name="options">
+						<h:outputLabel value="Olá, deslogado" style="margin-right:10px" 
+								rendered="#{!(login.logado())}" />
+						<p:button id="menuItemLogin" value="Login" icon="fa fa-fw fa-sign-in" 
+								rendered="#{!(login.logado())}" outcome="redirecionamento.xhtml" >
+							<f:param name="pagina" value="#{0}" />
+						</p:button>		
+						<h:outputLabel value="#{login.retornarLoginESaldo()}" style="margin-right:10px" 
+								rendered="#{login.logado()}" />
+						<p:commandButton id="menuItemLogout" value="Logout" icon="fa fa-fw fa-sign-out" 
+								rendered="#{login.logado()}" action="#{login.deslogar()}" ajax="false" />
+
+					</f:facet>
+				</p:menubar>
+			</h:form>
+		</ui:insert>
+	</div>
+
+
+	<div id="content">
+		<ui:insert name="content" />
+	</div>
+	
+	
+	
+	
+	
+
+	<div id="footer">
+		<p:panel columns="1" style="width : 100%; text-align:center">
+			<h:outputLabel value="Pantahei Tec, 2018. All rights reserved." />
+		</p:panel>
+	</div>
+
+</h:body>
+</html>

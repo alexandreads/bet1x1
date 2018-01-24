@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<!-- How to pass parameter to JSF 2.x template file: -->
+	<!-- https://www.mkyong.com/jsf2/how-to-pass-parameters-to-jsf-2-0-template-file/ -->
+	<f:metadata>
+		<f:viewAction action="#{menuUsuario.init()}"/>
+	</f:metadata>
+	
+	<ui:define name="title">
+		Menu Usuário
+	</ui:define>
+
+	<ui:define name="content">
+		<h:outputScript name="locale-primefaces.js" library="js" />
+		
+		<!-- DICA: para evitar problema de repetição das mensagens de erro (i.e. aparecerem tanto no p:messages do conteúdo da página principal, quanto no do diálogo),
+		deixar o p:messages do conteúdo da página sem o autoUpdate=true, e deixar o p:messages dos diálogos com o autoUpdate=true pra facilitar. A desvantagem é que
+		toda ação na página principal que for possível culminar numa mensagem de erro ser exibida é necessário lembrar de fazer update no p:messages, caso contrário
+		a mensagem não é exibida pro usuário.
+		Este cuidado só precisa ser feito caso você faça uso de diálogos na página. Caso não use diálogos na página, você pode usar o autoUpdate=true no p:messages 
+		sem correr risco de ocorrer problemas de repetição. -->
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		<p:fieldset legend="Filtro">
+			
+		
+			<h:form id="formFiltro">
+				
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+		
+					<p:outputLabel value="Nome: " for="nomeUsuario" />
+					<p:inputText id="nomeUsuario" value="#{menuUsuario.usuario.nome}"   />
+					
+					
+					<p:outputLabel value="Login: " for="loginUsuario" />
+					<p:inputText id="loginUsuario" value="#{menuUsuario.usuario.login}"   />
+					
+			
+					<p:commandButton id="btnPesquisar" action="#{menuUsuario.pesquisar()}" value="Pesquisar!" 
+						update=":dataTableUsuarios :idMessagesErrors" />
+
+					
+				</p:panelGrid>
+		
+			</h:form>
+		</p:fieldset>
+	
+	
+		<p:fieldset legend="Resultado">
+			<p:dataTable id="dataTableUsuarios" var="u" value="#{menuUsuario.usuarios}" 
+				emptyMessage="Nenhum disputante encontrado." 
+					rows="5" 
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+					
+				<p:column headerText="Id: ">
+					<h:outputText value="#{u.id}" />
+				</p:column>
+				<p:column headerText="Nome: ">
+					<h:outputText value="#{u.nome}" />
+				</p:column>
+				<p:column headerText="Login: ">
+					<h:outputText value="#{u.login}" />
+				</p:column>
+				<p:column headerText="Saldo: ">
+					<h:outputText value="R$ #{u.saldo}" />
+				</p:column>		
+				<p:column headerText="Estado: ">
+					<h:outputText value="#{u.estadoString()}" />
+				</p:column>					
+				
+				<p:column headerText="Ações:">
+					
+					<p:panelGrid columns="2" styleClass="ui-noborder" >
+						<p:button id="btnEditar" outcome="/admin/editarUsuario.xhtml" icon="fa fa-refresh" value="Editar" >
+							<f:param name="usuario" value="#{u.id}" />
+						</p:button>
+						<p:commandButton id="btnDesabilitar" action="#{menuUsuario.desabilitar(u.id)}" 
+						update=":idMessagesErrors"
+						icon="fa fa-trash" value="Desabilitar"/>
+						
+					</p:panelGrid>
+					
+				</p:column>
+								
+			</p:dataTable>
+		</p:fieldset>
+	
+		
+    </ui:define>
+</ui:composition>
+</html>

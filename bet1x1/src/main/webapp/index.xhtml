@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<!-- How to pass parameter to JSF 2.x template file: -->
+	<!-- https://www.mkyong.com/jsf2/how-to-pass-parameters-to-jsf-2-0-template-file/ -->
+	<f:metadata>
+		<o:viewParam name="desafiado" value="#{index.desafiado}" />
+		<f:viewAction action="#{index.init()}"/>
+	</f:metadata>
+	
+	
+
+	
+
+	
+	<ui:define name="title">
+		Página Inicial
+	</ui:define>
+
+	<ui:define name="content">
+	
+
+
+	
+		<h:outputScript name="locale-primefaces.js" library="js" />
+		
+		<!-- DICA: para evitar problema de repetição das mensagens de erro (i.e. aparecerem tanto no p:messages do conteúdo da página principal, quanto no do diálogo),
+		deixar o p:messages do conteúdo da página sem o autoUpdate=true, e deixar o p:messages dos diálogos com o autoUpdate=true pra facilitar. A desvantagem é que
+		toda ação na página principal que for possível culminar numa mensagem de erro ser exibida é necessário lembrar de fazer update no p:messages, caso contrário
+		a mensagem não é exibida pro usuário.
+		Este cuidado só precisa ser feito caso você faça uso de diálogos na página. Caso não use diálogos na página, você pode usar o autoUpdate=true no p:messages 
+		sem correr risco de ocorrer problemas de repetição. -->
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		<p:fieldset legend="Filtro">
+		
+			<h:form id="formFiltro">
+				
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+
+		
+		
+					<p:outputLabel value="Modalidade: " for="grupoModalidade" />
+					<p:selectOneMenu id="grupoModalidade" value="#{index.modalidadeFiltro}" label="modalidades">
+						<f:selectItem  itemLabel="Todos" itemValue="#{null}" />
+						<f:selectItems var="m" value="#{index.getModalidades()}"  itemLabel="#{m.nome}" 
+							itemValue="#{m}" />
+						<p:ajax update=":formFiltro:grupoCompeticao" listener="#{index.loadCompeticoes()}"/> 
+					</p:selectOneMenu>
+							
+			
+					<p:outputLabel value="Competicão: " for="grupoCompeticao" />
+					<p:selectOneMenu id="grupoCompeticao" value="#{index.competicaoFiltro}"  
+					label="competicoes">
+						<f:selectItem  itemLabel="Todos" itemValue="#{null}" />
+						<f:selectItems var="c" value="#{index.getCompeticoes()}"  itemLabel="#{c.nome}" itemValue="#{c}" />
+					</p:selectOneMenu>	
+					
+					<p:outputLabel value="Evento a partir de: " for="dataAPartir" />	
+					<ui:include src="/WEB-INF/templates/_calendario.xhtml">
+						<ui:param name="id" value="dataAPartir" />
+						<ui:param name="required" value="false" />
+						<ui:param name="value" value="#{index.dataAPartir}" />
+						<ui:param name="name" value="Data a Partir" />
+					</ui:include>
+					
+					<p:outputLabel value="Evento até: " for="dataAte" />	
+					<ui:include src="/WEB-INF/templates/_calendario.xhtml">
+						<ui:param name="id" value="dataAte" />
+						<ui:param name="required" value="false" />
+						<ui:param name="value" value="#{index.dataAte}" />
+						<ui:param name="name" value="Data Ate" />
+					</ui:include>
+					
+
+					
+								
+					
+			
+					<p:commandButton id="btnTeste" action="#{index.loadEventos()}" value="Pesquisar!" update=":dataTableEventos"/>
+					
+
+					
+				</p:panelGrid>
+		
+			</h:form>
+		</p:fieldset>
+	
+	
+		<p:fieldset legend="Resultado">
+			<p:dataTable id="dataTableEventos" var="evento" value="#{index.eventos}" emptyMessage="Nenhum evento encontrado." 
+					rows="5" 
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+				<p:column headerText="Evento: ">
+					<h:outputText value="#{evento.chamada()}" />
+				</p:column>
+				<p:column headerText="Data:">
+					<h:outputText value="#{evento.dataComTimeZone(login.getTimeZoneDiference())}" >
+						<f:convertDateTime  pattern="dd/MM/yyyy,  HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Ação:">
+
+					<p:commandButton id="btnApostar" action="#{index.cadastrarApostar(evento.id)}" icon="fa fa-money" 
+						value="Cadastrar Aposta!" />
+
+					<p:button id="cadastrarResultado" outcome="cadastrarResultado.xhtml" value="Resultado"  
+							rendered="#{login.isUserInRole('ADMIN')}">
+						<f:param name="evento" value="#{evento.id}" />
+					</p:button>
+				</p:column>
+								
+			</p:dataTable>
+		</p:fieldset>
+		
+    </ui:define>
+</ui:composition>
+</html>

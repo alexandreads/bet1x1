@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<!-- How to pass parameter to JSF 2.x template file: -->
+	<!-- https://www.mkyong.com/jsf2/how-to-pass-parameters-to-jsf-2-0-template-file/ -->
+	<f:metadata>
+		<f:viewAction action="#{minhasApostas.init()}"/>
+	</f:metadata>
+	
+	<ui:define name="title">
+		Minhas Apostas
+	</ui:define>
+
+	<ui:define name="content">
+	
+		<h:outputScript name="locale-primefaces.js" library="js" />
+		
+		
+		
+		
+	
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		
+		
+	<p:tabView>
+	        <p:tab title="Resolvidas">
+	        
+        		<p:fieldset>
+
+		        	<p:dataTable id="dataTableApostasReolvidas" var="a" value="#{minhasApostas.resolvidas}" 
+		        		emptyMessage="Nenhuma aposta resolvida." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+					<p:column headerText="Condição: ">
+						<h:outputText value="#{a.chamadaDaAposta()}" />
+					</p:column>
+					<p:column headerText="Evento:">
+						<h:outputText value="#{a.evento.chamada()}" />
+					</p:column>
+					<p:column headerText="Desafiante/Desafiado:">
+						<h:outputText value="#{a.desafianteOuDesafiado()}" />
+					</p:column>
+					<p:column headerText="Valor apostado/esperado:">
+						<h:outputText value="#{a.valorApostado} / #{a.valorEsperado}" />
+					</p:column>
+					<p:column headerText="Resultado:">
+						<h:outputText value="#{a.resultadoParaLogado()}" />
+					</p:column>
+					
+					</p:dataTable>
+					
+				</p:fieldset>
+				
+				
+	        </p:tab>
+	        <p:tab title="Aguardando Resultado">
+	            <p:fieldset >
+		
+			
+					<p:dataTable id="dataTableApostasAguardandoResultado" var="a" value="#{minhasApostas.aguardandoResultado}" emptyMessage="Nenhuma aposta aguardando resultado." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+					<p:column headerText="Condição: ">
+						<h:outputText value="#{a.chamadaDaAposta()}" />
+					</p:column>
+					<p:column headerText="Evento:">
+						<h:outputText value="#{a.evento.chamada()}" />
+					</p:column>
+					<p:column headerText="Desafiante/Desafiado:">
+						<h:outputText value="#{a.id} #{a.desafianteOuDesafiado()}" />
+					</p:column>
+					<p:column headerText="Valor apostado/esperado:">
+						<h:outputText value="#{a.valorApostado} / #{a.valorEsperado}" />
+					</p:column>
+					<p:column headerText="Ações:">
+						<p:commandButton icon= "fa fa-times" value="Desistir" action="#{minhasApostas.desistir(a.id)}"/>
+					</p:column>
+					
+					
+					</p:dataTable>
+				
+				</p:fieldset>
+	        </p:tab>
+	        
+	        <p:tab title="Desafios Recebidos">
+	        	
+	        	<p:fieldset >
+			
+					<p:dataTable id="dataTableApostasDesafiadas" var="a" value="#{minhasApostas.desafiosRecebidos}" emptyMessage="Nenhum desafio de aposta para você." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+						<p:column headerText="Condição: ">
+							<h:outputText value="#{a.chamadaDaAposta()}" />
+						</p:column>
+						<p:column headerText="Evento:">
+							<h:outputText value="#{a.evento.chamada()}" />
+						</p:column>
+						<p:column headerText="Valor apostado/esperado:">
+							<h:outputText value="#{a.valorApostado} / #{a.valorEsperado}" />
+						</p:column>
+						<p:column headerText="Ações:">
+							<p:commandButton action="#{minhasApostas.aceitarDesafio(a.id)}" value="Aceitar"/>
+						</p:column>
+					</p:dataTable>
+					
+				</p:fieldset>
+	        </p:tab>
+	    </p:tabView>
+	
+	
+		
+    </ui:define>
+    
+</ui:composition>
+</html>

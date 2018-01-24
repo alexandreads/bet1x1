@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jboss-web PUBLIC "-//JBoss//DTD Web Application 2.4//EN" "http://www.jboss.org/j2ee/dtd/jboss-web_5_0.dtd">
+<jboss-web>
+	<security-domain>bet1x1JdbcRealm</security-domain>
+	<context-root>/bet1x1</context-root>
+	<security-role>
+		<role-name>ADMIN</role-name>
+		<principal-name>ADMIN</principal-name>
+	</security-role>
+	<security-role>
+		<role-name>CLIENTE</role-name>
+		<principal-name>CLIENTE</principal-name>
+	</security-role>
+	<security-role>
+		<role-name>GERENTE</role-name>
+		<principal-name>GERENTE</principal-name>
+	</security-role>
+</jboss-web>

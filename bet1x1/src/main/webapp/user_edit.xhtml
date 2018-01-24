@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<f:metadata>
+		<o:viewParam name="user" value="#{userEdit.user}" converter="userConverter" />
+		<!-- <f:event listener="#{userEdit.init()}" type="preRenderView" /> -->
+		<f:viewAction action="#{userEdit.init()}"/>
+	</f:metadata>
+
+	<ui:define name="title">
+		User create/edit
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:outputScript name="locale-primefaces.js" library="js" />
+		
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+		<p:messages id="idMessagesErrors" showDetail="true" autoUpdate="true" closable="true" severity="error" />
+	
+		<h:form id="formEdit">
+	
+			<ui:include src="/WEB-INF/templates/_campos_edit_usuario.xhtml" />			
+			
+			<p:panelGrid columns="2" styleClass="ui-noborder">
+				<p:commandButton id="botaoSubmeter" action="#{userEdit.saveUser}" value="Submit" update="@form" icon="fa fa-save" />
+				<p:button id="botaoCancelar" outcome="index.xhtml" value="Cancel" icon="fa fa-remove" />
+			</p:panelGrid>
+	
+			<p:defaultCommand target="formEdit:botaoSubmeter" />
+	
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

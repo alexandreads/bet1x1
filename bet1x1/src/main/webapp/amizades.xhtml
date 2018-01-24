@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+
+	<!-- How to pass parameter to JSF 2.x template file: -->
+	<!-- https://www.mkyong.com/jsf2/how-to-pass-parameters-to-jsf-2-0-template-file/ -->
+	<f:metadata>
+		<f:viewAction action="#{amizades.init()}"/>
+	</f:metadata>
+	
+	<ui:define name="title">
+		Amizades
+	</ui:define>
+
+	<ui:define name="content">
+	
+		<h:outputScript name="locale-primefaces.js" library="js" />
+		
+		
+		
+		
+	
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		
+		
+		<p:tabView id="tab">
+	        <p:tab title="Amizades Efetivadas">
+	        
+        		<p:fieldset>
+
+		        	<p:dataTable id="dataTableAmizadesEfetivadas" var="a" value="#{amizades.amizadesEfetivadas}" 
+		        		emptyMessage="Nenhuma amizade, convide alguém." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+					<p:column headerText="Condição: ">
+						<h:outputText value="#{a.amigoLogin()}" />
+					</p:column>
+					
+					</p:dataTable>
+					
+				</p:fieldset>
+				
+				
+	        </p:tab>
+	        
+	        <p:tab title="Pedidos de Amizade Recebidos">
+	            <p:fieldset >
+		
+			
+					<p:dataTable id="dataTableConvitesRecebidas" var="a" value="#{amizades.pedidosRecebidos}" 
+		        		emptyMessage="Nenhuma amizade, convide alguém." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+					<p:column headerText="Te pediu: ">
+						<h:outputText value="#{a.amigoLogin()}" />
+					</p:column>
+					<p:column headerText="Ação:">
+						<p:commandButton id="btnAceitarPedido" value="Aceitar" action="#{amizades.aceitarPedido(a.id)}" 
+								icon="fa fa-money" />
+					</p:column>
+					<p:column headerText="Ação:">
+						<p:commandButton id="btnRejeitarPedido" value="Rejeitar" action="#{amizades.rejeitarPedido(a.id)}" 
+								icon="fa fa-money" />
+					</p:column>
+					</p:dataTable>
+				
+				</p:fieldset>
+	        </p:tab>
+	        
+	        <p:tab title="Pedidos de Amizade Enviados">
+	        	
+	        	<p:fieldset >
+			
+					<p:dataTable id="dataTableConvitesEnviados" var="a" value="#{amizades.pedidosEnviados}" 
+		        		emptyMessage="Nenhuma amizade, convide alguém." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+					<p:column headerText="Você enviou para: ">
+						<h:outputText value="#{a.amigoLogin()}" />
+					</p:column>
+					<p:column headerText="Ação:">
+						<p:commandButton id="btnCancelarPedido" value="Cancelar" action="#{amizades.desfazerConvite(a.id)}" 
+								icon="fa fa-money" />
+					</p:column>
+					
+					</p:dataTable>
+					
+				</p:fieldset>
+	        </p:tab>
+	        
+    	    <p:tab id="tabProcurar" title="Procurar">
+    	   		
+    	   		
+    	   		<p:fieldset  id="filtro" legend="Filtro">
+			
+					<h:form>				
+						<p:outputLabel value="Login" for="loginFiltro" />	
+						<p:inputText id="loginFiltro" value="#{amizades.loginFiltro}" />
+						
+						<p:commandButton id="btnPesquisar" value="Pesquisar" update=":tab:dataTableUsuariosEncontrados"
+								action="#{amizades.loadUsuariosEncontrados()}"/>
+					</h:form>
+					
+				</p:fieldset>
+    	    	
+    	    	
+	        	
+	        	<p:fieldset legend="Resultado" >
+			
+					<p:dataTable id="dataTableUsuariosEncontrados" var="u" value="#{amizades.usuariosEncontrados}" 
+		        		emptyMessage="Nenhuma amizade, convide alguém." 
+						rows="5" 
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+					<p:column headerText="Usuário ">
+						<p:link outcome="perfilUsuario.xhtml" value="#{u.login}">
+					   		<f:param name="usuario" value="#{u.id}" />
+						</p:link>
+					</p:column>
+					
+					</p:dataTable>
+					
+				</p:fieldset>
+	        </p:tab>
+	        
+	        
+	    </p:tabView>
+	
+	
+		
+    </ui:define>
+    
+</ui:composition>
+</html>

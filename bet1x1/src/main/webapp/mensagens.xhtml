@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+	
+	
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+	<f:metadata>
+		<o:viewParam name="conversa" value="#{mensagens.conversa}" />
+		<f:viewAction action="#{mensagens.verificarSeUsuarioPodeVer()}" />
+		<f:viewAction action="#{mensagens.init()}"/> 
+	</f:metadata>
+	
+	
+	
+	
+	<ui:define name="title">
+		Mensagens
+	</ui:define>
+	
+
+	<ui:define name="content">
+	
+	
+		<p:growl id="idMessages" showDetail="true" autoUpdate="true" severity="info" />
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		<p:socket  onMessage="handleMessage"   channel="/chat">
+			<p:ajax listener="#{mensagens.loadMensagens()}" update=":mensagensFild :enviarMensagemForm:inputTextoMensagem" />
+		</p:socket>
+		
+		<script type="text/javascript">
+			function handleMessage() {
+			    
+			}
+		
+		</script>
+
+		<p:fieldset id="mensagensFild">
+			<ui:repeat value="#{mensagens.mensagensLista}" varStatus="loop" var="m">
+				<p:panelGrid columns="1" styleClass="ui-noborder"> 
+					<h:outputText value="#{m.retornarTextoTrabalhado()}" />
+	       		</p:panelGrid>
+	        </ui:repeat>
+		</p:fieldset>
+		
+		
+		<h:form id="enviarMensagemForm">
+		
+			<p:outputLabel value="Texto: " for="inputTextoMensagem" />
+			<p:inputText id="inputTextoMensagem"  value="#{mensagens.textoEnviar}"    /> 
+			
+			<p:commandButton id="btnEnviarMensagem" value="Enviar Mensagem"  action="#{mensagens.enviarMensagem()}" />
+			<p:commandButton id="btnTeste" value="Teste"  action="#{mensagens.verificarSeUsuarioPodeVer()}" />
+			
+		</h:form>
+		
+		
+	 </ui:define>
+	 
+</ui:composition> 
+
+</html>

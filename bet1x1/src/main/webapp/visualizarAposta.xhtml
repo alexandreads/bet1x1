@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+	
+	
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+	<f:metadata>
+		<o:viewParam name="aposta" value="#{vizualizarAposta.aposta}" />
+		
+		<f:viewAction action="#{vizualizarAposta.init()}"/> 
+	</f:metadata>
+	
+	
+	
+	
+	<ui:define name="title">
+		Perfil do Usuário
+	</ui:define>
+	
+
+	<ui:define name="content">
+	
+		<p:messages id="idMessagesErrors" showDetail="true" closable="true" severity="error" />
+		
+		<h:outputText value="#{perfilUsuario.usuario.login}"/>
+		
+		<p:button id="btnIniciarConversa" outcome="conversas.xhtml" value="Enviar Mensagem">
+			<f:param name="usuario" value="#{perfilUsuario.usuario.id}" />
+		</p:button>
+		<p:commandButton value="Solicitar Amizade" action="#{perfilUsuario.solicitarAmizade()}" 
+				rendered="#{perfilUsuario.naoAmigos()}"  />
+		<p:commandButton value="Cancelar Convite" action="#{perfilUsuario.desfazerConvite()}" 
+				rendered="#{perfilUsuario.amizadeEnviada()}"  />
+		<p:button id="btnDesafiar" outcome="index.xhtml" value="Desafiar!" >
+			<f:param name="desafiado" value="#{perfilUsuario.usuario.id}" />
+		</p:button>
+
+		
+	 </ui:define>
+	 
+</ui:composition> 
+
+</html>

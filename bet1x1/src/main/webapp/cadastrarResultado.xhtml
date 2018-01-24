@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+	
+	
+<ui:composition template="/WEB-INF/templates/__commonLayout.xhtml">
+	<f:metadata>
+		<o:viewParam name="evento" value="#{cadastrarResultado.evento}" />
+		<!-- <f:event listener="#{userEdit.init()}" type="preRenderView" /> -->
+		<f:viewAction action="#{cadastrarResultado.init()}"/> 
+	</f:metadata>
+	
+	
+	
+	
+	<ui:define name="title">
+		Adicionar Resultado
+	</ui:define>
+	
+
+	<ui:define name="content">
+		 
+		<p:fieldset >
+		
+		<h:form>
+		
+			
+				<h:outputText value="   Disputante e seu Score" />
+				<ui:repeat value="#{cadastrarResultado.scores}" varStatus="loop" var="s">
+					<p:panelGrid columns="2" styleClass="ui-noborder"> 
+						<h:outputText value="#{s.disputante.nome}" />
+			            <p:inputText value="#{s.valor}" />
+            		</p:panelGrid>
+		        </ui:repeat>
+				
+			
+				<p:commandButton id="btnCadastrarResultado" action="#{cadastrarResultado.adicionar()}" value="Cadastrar Resultado!" />	
+			
+	
+		
+<!-- 			<p:dataTable id="dataTableScores" var="s" value="#{cadastrarResultado.scores}" 
+					emptyMessage="Nenhum evento encontrado." 
+					rows="5" 
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+				<p:column headerText="Disputante:">
+					<h:outputText value="#{s.disputante.nome}" />
+				</p:column>
+				<p:column headerText="Em casa:" >
+					<h:outputText value="#{s.jogaEmCasa}" />
+				</p:column>
+				<p:column headerText="Score:">
+					<p:inputText value="#{cadastrarResultado.valores}" />
+				</p:column>
+			</p:dataTable> -->
+			
+		</h:form>
+		</p:fieldset>
+		
+	
+		
+    	<p:dialog id="cadastrarApostaDialogoId" widgetVar="cadastrarApostaDialogo" header="User edit" modal="true" dynamic="true" closeOnEscape="true">
+		
+			<p:messages id="idMessagesErrorsUserEdit" showDetail="true" closable="true" autoUpdate="true" severity="error" />
+		
+			<h:form id="formEdit">
+		
+				<p:panelGrid columns="4" styleClass="ui-noborder">
+	   				<p:outputLabel for="valorApostado" value="Valor apostado:" />
+	   				<p:inputNumber id="valorApostado" value="#{cadastrarAposta.aposta.valorApostado}">  
+	               		<p:ajax update="valorApostado" />  
+	           		</p:inputNumber> 
+	           		
+	           		<p:outputLabel for="valorRetorno" value="Retorno esperado:" />
+	   				<p:inputNumber id="valorRetorno" value="#{cadastrarAposta.aposta.valorEsperado}">  
+	               		<p:ajax update="valorRetorno" />  
+	           		</p:inputNumber> 
+	       		</p:panelGrid> 
+
+
+
+	 
+	 
+				<p:commandButton id="cadastrarApostaBtn" action="#{cadastrarAposta.cadastrar(0)}" 
+					value="Publicar aposta no Mercado"  icon="fa fa-save" />	
+					
+				
+
+
+				
+							
+			</h:form>
+		
+		</p:dialog>
+		
+	 </ui:define>
+	 
+</ui:composition> 
+
+</html>
