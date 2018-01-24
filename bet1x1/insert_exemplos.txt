@@ -1,0 +1,23 @@
+// add modalidades
+
+INSERT INTO modalidade (id, nome) 
+VALUES (11, 'Futebol' ), (12, 'Automobilismo'), (10, 'Luta');
+
+// adicionando certames
+
+INSERT INTO competicao (id, nome, modalidade_id) 
+VALUES (10, 'UFC 221', 10 ), (12, 'Campeaonado Brasileiro 2017', 11), (11, 'Formula 1 2017', 12);
+
+// add disputantes
+
+INSERT INTO disputante (id, nome, modalidade_id) 
+VALUES (10, 'Corinthians', 11 ), (11, 'Palmeiras', 11), (12, 'Werdum', 10), (13, 'Felipe Massa', 12);
+
+// add eventos
+INSERT INTO evento (id,  data, nome, estado, evento_id) 
+VALUES (10, '01-01-2018 16:00', 'futebol', 0, 12  ), (11, '01-01-2018 18:00', 'futebol', 0, 12),
+(12, '24-12-2017', 'GP Abu Dabih', 0, 11), (13, '15-12-2017 00:00', 'luta', 0, 10);
+
+// add scores
+INSERT INTO score (id, jogaemcasa, valor, disputante_id, evento_id) 
+VALUES (10,  false, 0, 10, 10  ), (11, false, 0, 11, 10), (12, false, 0, 13, 12), (13, false, 0, 12, 13);
