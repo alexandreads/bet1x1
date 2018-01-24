@@ -51,8 +51,11 @@
 					<p:column headerText="Desafiante/Desafiado:">
 						<h:outputText value="#{a.desafianteOuDesafiado()}" />
 					</p:column>
-					<p:column headerText="Valor apostado/esperado:">
-						<h:outputText value="#{a.valorApostado} / #{a.valorEsperado}" />
+					<p:column headerText="Valor apostado">
+						<h:outputText value="#{a.valorApostado}" />
+					</p:column>
+					<p:column headerText="Valor esperado:">
+						<h:outputText value="#{a.valorEsperado}" />
 					</p:column>
 					<p:column headerText="Resultado:">
 						<h:outputText value="#{a.resultadoParaLogado()}" />

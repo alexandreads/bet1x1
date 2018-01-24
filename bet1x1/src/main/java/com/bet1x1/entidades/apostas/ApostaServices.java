@@ -60,6 +60,34 @@ public class ApostaServices implements Serializable {
 	
 	
 	
+	public void aceitarDesafio(Aposta aposta, Usuario aceitante) throws ServiceException {
+		
+		
+		
+		if(aposta.getEstado() != EstadosDaAposta.ABERTA_PARA_UM_ESPECIFICO) {
+			throw new ServiceException("Aposta em estado diferente de aberto para específico.");
+		}
+		
+		
+		aposta.setUsuarioAceitador(aceitante);
+		aposta.setEstado(EstadosDaAposta.COMBINADA_ANTES_DO_INICIO_EVENTO);
+		
+
+		
+		aceitante.setSaldo(aceitante.getSaldo() - aposta.getValorEsperado());
+		aceitante.getApostasAceitadoras().add(aposta);
+		
+		
+		
+		try {
+			updateUsuarioEAposta(aposta, aceitante);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 	
 	public void save(Aposta instancia)  {
 	
@@ -381,6 +409,10 @@ public class ApostaServices implements Serializable {
 	}
 	
 	public void desistirAposta(Aposta aposta, Usuario desistente) throws ServiceException {
+		
+		if(aposta.getEstado() != EstadosDaAposta.COMBINADA_ANTES_DO_INICIO_EVENTO) {
+			throw new ServiceException("Aposta em estado inabilitado para esta ação.");
+		}
 		
 		
 		Usuario persistente = null;

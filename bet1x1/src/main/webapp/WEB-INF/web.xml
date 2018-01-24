@@ -98,6 +98,7 @@
 			<web-resource-name>Área dos logados</web-resource-name>
 			<description />
 			<url-pattern>/redirecionamento.xhtml</url-pattern>
+			<url-pattern>/minhasApostas.xhtml</url-pattern>
 			<http-method>GET</http-method>
 			<http-method>POST</http-method>
 			<http-method>HEAD</http-method>

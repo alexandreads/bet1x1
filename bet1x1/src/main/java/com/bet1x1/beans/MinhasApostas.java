@@ -64,10 +64,7 @@ public class MinhasApostas extends AbstractBean {
 		
 	}
 	
-	public void teste() {
-		
-		System.out.println("teste");
-	}
+
 	
 
 	public void loadResolvidas() {
@@ -107,81 +104,26 @@ public class MinhasApostas extends AbstractBean {
 		}
 		
 		else {
-			aposta.setUsuarioAceitador(usuario);
-			aposta.setEstado(EstadosDaAposta.COMBINADA_ANTES_DO_INICIO_EVENTO);
-			
-
-			
-			usuario.setSaldo(usuario.getSaldo() - aposta.getValorEsperado());
-			usuario.getApostasAceitadoras().add(aposta);
-			
-			
 			
 			try {
-				apostaServices.updateUsuarioEAposta(aposta, usuario);
+				apostaServices.aceitarDesafio(aposta, usuario);
 				reportarMensagemDeSucesso("Aposta aceita com sucesso.");
 			} catch (ServiceException e) {
 				e.printStackTrace();
 				reportarMensagemDeErro("Aposta não conseguiu ser aceita devido a algum erro.");
 			}
 			
-	
-			
-			 
 			
 		}
 		
 		
 		return EnderecoPaginas.MINHAS_APOSTAS+EnderecoPaginas.FACES_REDIRECT;
 		
-		
-		
-	}
-	
-	public String pegarAposta(Long idAposta) {
-		
-		
-		Usuario usuario = usuarioServices.getUsuarioLogado();
-		Aposta aposta = apostaServices.getById(idAposta);
-		
-		
-		if(usuario == null) {
-			
-			reportarMensagemDeErro("Não existe um usuário logado.");
-		}
-		
-		else if (usuario.getSaldo() < aposta.getValorEsperado()) {
-
-			reportarMensagemDeErro("Você não tem saldo suficiente para pegar esta aposta.");
-			
-		}
-		
-		else {
-			aposta.setUsuarioAceitador(usuario);
-			aposta.setEstado(EstadosDaAposta.COMBINADA_ANTES_DO_INICIO_EVENTO);
-			usuario.setSaldo(usuario.getSaldo() - aposta.getValorEsperado());
-			usuario.getApostasAceitadoras().add(aposta);
-			
-			try {
-				usuarioServices.update(usuario);
-				reportarMensagemDeSucesso("Aposta aceita com sucesso.");
-			} catch (ServiceException e) {
-				e.printStackTrace();
-				reportarMensagemDeErro("Aposta não conseguiu ser aceita devido a algum erro.");
-			}
-			
-	
-			
-			 
-			
-		}
-		
-		
-		return EnderecoPaginas.MERCADO_APOSTAS+EnderecoPaginas.FACES_REDIRECT;
-		
 	}
 	
 	
+	
+		
 	public String desistir(Long idAposta) {
 		
 		
